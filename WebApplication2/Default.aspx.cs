@@ -3,7 +3,6 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Collections.Generic;
 using System.Data;
 
 namespace WebApplication2
@@ -14,7 +13,7 @@ namespace WebApplication2
         {
             if (!IsPostBack)
             {
-                // Popola i dropdown all'inizio della pagina
+                // Populate the dropdowns at the beginning of the page
                 PopolaDropDownAuto();
                 PopolaDropDownOptional();
                 PopolaDropDownGaranzia();
@@ -23,11 +22,9 @@ namespace WebApplication2
 
         private void PopolaDropDownAuto()
         {
-            SqlConnection connection = null;
             try
             {
-                // Utilizzo di using per garantire la chiusura automatica della connessione
-                string connection = new SqlConnection=)
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
                 {
                     connection.Open();
                     string query = "SELECT ID_Macchina, Modello FROM Macchine";
@@ -42,27 +39,15 @@ namespace WebApplication2
             }
             catch (Exception ex)
             {
-                // Gestisci l'eccezione come preferisci, ad esempio, puoi registrare l'errore o mostrare un messaggio all'utente
                 Console.WriteLine($"Si è verificato un errore: {ex.Message}");
-            }
-            finally
-            {
-                // Assicurati di chiudere la connessione anche se si verificano eccezioni
-                if (connection != null && connection.State == ConnectionState.Open)
-                {
-                    connection.Close();
-                }
             }
         }
 
-
         private void PopolaDropDownOptional()
         {
-            SqlConnection connection = null;
             try
             {
-                // Utilizzo di using per garantire la chiusura automatica della connessione
-                using (connection = new SqlConnection("Macchine"))
+                using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString))
                 {
                     connection.Open();
                     string query = "SELECT ID_Optional, Nome, Prezzo FROM OptionalMacchine";
@@ -77,23 +62,12 @@ namespace WebApplication2
             }
             catch (Exception ex)
             {
-                // Gestisci l'eccezione come preferisci, ad esempio, puoi registrare l'errore o mostrare un messaggio all'utente
                 Console.WriteLine($"Si è verificato un errore: {ex.Message}");
-            }
-            finally
-            {
-                // Assicurati di chiudere la connessione anche se si verificano eccezioni
-                if (connection != null && connection.State == ConnectionState.Open)
-                {
-                    connection.Close();
-                }
             }
         }
 
-
         private void PopolaDropDownGaranzia()
         {
-            // Aggiungi anni di garanzia al dropdown
             for (int i = 1; i <= 10; i++)
             {
                 ListItem item = new ListItem($"{i} Anno{(i > 1 ? "i" : "")} di Garanzia - Costo: {i * 120} EUR", i.ToString());
@@ -103,11 +77,17 @@ namespace WebApplication2
 
         protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Implementa la logica per l'evento di selezione del DropDownList1
-            // Esempio: AggiornaImmagineEPrezzo();
+            // Implement logic for the DropDownList1 selected index change event
+            // Example: UpdateImageAndPrice();
         }
+
         protected void Button1_Click(object sender, EventArgs e)
-        { 
+        {
+            string selectedCarId = DropDownList1.SelectedValue;
+            string selectedOptionalId = DropDownList2.SelectedValue;
+            string selectedWarranty = DropDownList3.SelectedValue;
+
+            // Add your logic here based on the selected values
         }
-        }
+    }
 }
